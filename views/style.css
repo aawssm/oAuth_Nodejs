@@ -1,0 +1,33 @@
+.provider-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.provider-card {
+    width: 100%;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.provider-card h2 {
+    margin-bottom: 10px;
+}
+
+.provider-card p {
+    margin-bottom: 10px;
+}
+
+
+.container button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #4285f4;
+    color: white;
+}

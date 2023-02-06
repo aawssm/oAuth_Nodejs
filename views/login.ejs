@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Login</h1>
+      <div class="providers"></div>
+    </div>
+    <script>
+      const providersContainer = document.querySelector(".providers");
+
+      // make an api call to get available providers
+      fetch("/providers")
+        .then((res) => res.json())
+        .then((data) => {
+          // loop through providers and render buttons
+          data.providers.forEach((provider) => {
+            const button = document.createElement("button");
+            button.classList.add("btn", `btn-${provider}`);
+            button.innerHTML = `<i class="fab fa-${provider}"></i> Login with ${
+              provider.charAt(0).toUpperCase() + provider.slice(1)
+            }`;
+            button.addEventListener("click", () => {
+              window.location.href = `/auth/${provider}`;
+            });
+            providersContainer.appendChild(button);
+          });
+        })
+        .catch((err) => console.error(err));
+    </script>
+  </body>
+</html>

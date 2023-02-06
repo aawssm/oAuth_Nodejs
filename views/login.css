@@ -1,0 +1,87 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.providers {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.providers button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Provider-specific styles */
+.providers .btn-google {
+    background-color: #4285f4;
+    color: white;
+}
+
+.providers .btn-google:hover {
+    background-color: #357ae8;
+}
+
+.providers .btn-github {
+    background-color: #333;
+    color: white;
+}
+
+.providers .btn-github:hover {
+    background-color: #262626;
+}
+
+.providers .btn-twitter {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.providers .btn-twitter:hover {
+    background-color: #0d95e5;
+}
+
+.providers .btn-linkedin {
+    background-color: #0077b5;
+    color: white;
+}
+
+.providers .btn-linkedin:hover {
+    background-color: #006fa6;
+}
+
+.providers .btn-slack {
+    background-color: #4A154B;
+    color: white;
+}
+
+.providers .btn-slack:hover {
+    background-color: #3B103D;
+}
+
+.providers .btn-facebook {
+    background-color: #3B5998;
+    color: white;
+}
+
+.providers .btn-facebook:hover {
+    background-color: #2E4F73;
+}
+
+.providers .btn-microsoft {
+    background-color: #F65314;
+    color: white;
+}
+
+.providers .btn-microsoft:hover {
+    background-color: #E44D12;
+}

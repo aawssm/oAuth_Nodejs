@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+    <title>User Profile</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Logged in Providers</h1>
+      <p>
+        <button id="more-login-btn">Connect More oAuth</button>
+        <button id="clear-cookies-btn">Logout</button>
+      </p>
+      <div class="provider-container"></div>
+    </div>
+    <script>
+      const params = new URL(location.href).searchParams;
+      const token = params.get("token");
+      document
+        .getElementById("clear-cookies-btn")
+        .addEventListener("click", function () {
+          // Clear all cookies
+          document.cookie.split(";").forEach(function (c) {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(
+                /=.*/,
+                "=;expires=" + new Date().toUTCString() + ";path=/"
+              );
+          });
+          return (window.location.href = window.location.origin + "/login");
+        });
+      document
+        .getElementById("more-login-btn")
+        .addEventListener("click", function () {
+          return (window.location.href = window.location.origin + "/login");
+        });
+      // make api call to /user
+      const providersContainer = document.querySelector(".provider-container");
+      fetch("/user")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+
+          for (const provider of [
+            "google",
+            "twitter",
+            "github",
+            "linkedin",
+            "slack",
+          ]) {
+            console.log(provider);
+            if (!data[provider]) continue;
+            const prof = document.createElement("div");
+            for (let key in data[provider]) {
+              const div = document.createElement("p");
+              div.innerHTML = `<strong>${key}:</strong> ${smallString(
+                data[provider][key]
+              )}`;
+              prof.appendChild(div);
+            }
+            const accesToken = document.createElement("p");
+            accesToken.innerHTML = `<strong>accessToken:</strong> ${smallString(
+              data[provider]["providers"][0].accessToken
+            )}`;
+            prof.appendChild(accesToken);
+            const reFreshToken = document.createElement("p");
+            reFreshToken.innerHTML = `<strong>refreshToken:</strong> ${smallString(
+              data[provider]["providers"][0].refreshToken
+            )}`;
+            prof.appendChild(reFreshToken);
+
+            const temp = document.createElement("div");
+            temp.classList.add("provider-container");
+            temp.innerHTML = `
+                            <div class="provider-card" *ngFor="let provider of profile">
+                              <h2>${provider}</h2>
+                              <p>${prof.innerHTML}</p>
+                            </div>
+                                `;
+            providersContainer.appendChild(temp);
+          }
+        });
+
+      function smallString(str, len = 15) {
+        if (!str) return "";
+        if (str.constructor === Object || str.constructor === Array) {
+          return ""; //str.toString();
+        }
+        if (str.length < len) return str;
+        if (str.constructor === String) return str.substring(0, len) + "...";
+        else return str;
+      }
+    </script>
+  </body>
+</html>
