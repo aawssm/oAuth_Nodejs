@@ -16,6 +16,20 @@
     <script>
       const params = new URL(location.href).searchParams;
       const token = params.get("token");
+      const scheme = `scheme://scheme.com/?token=${token}`;
+      // if (navigator.userAgent.match(/Android/i)) {
+      //   window.location.replace(scheme);
+      // } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+      //   // window.location.replace("scheme://scheme.com");
+      //   window.location.replace(scheme);
+      // } else if (navigator.userAgent.match(/Windows/i)) {
+      //   // Redirect to Windows app
+      //   if (token) window.location = scheme;
+      //   if (token && confirm("Open Flutter web app?")) {
+      //     window.location = `http://127.0.0.1:5000/?token=${token}`;
+      //   }
+      // }
+      // if (token) window.location.replace(window.location.origin);
       document
         .getElementById("clear-cookies-btn")
         .addEventListener("click", function () {
