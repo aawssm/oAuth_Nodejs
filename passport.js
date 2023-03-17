@@ -8,18 +8,28 @@ const LinkedInStrategy = require("passport-linkedin-oauth2").Strategy;
 const MicrosoftStrategy = require("passport-microsoft").Strategy;
 const SlackStrategy = require("passport-slack-oauth2").Strategy;
 const TwitterStrategy = require("passport-twitter").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 
 const host = process.env.HOST || "localhost";
 const port = process.env.PORT;
 const scheme = process.env.SCHEME || "https";
 const callBackUrl = (strat) => {
-    const value = `${scheme}://${host}${port === undefined ||port.length===0? "" : `:${port}`
+    const value = `${scheme}://${host}${port === undefined || port.length === 0 ? "" : `:${port}`
         }/auth/${strat}/callback`;
     //  console.log(value);
     return value;
 };
 
 const providers = {
+    local: {
+        clientID: "yes",
+        clientSecret: "yes",
+        options: {
+            session: false,
+            // successRedirect: callBackUrl("local"),
+            failureRedirect: "/login",
+        },
+    },
     google: {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -83,6 +93,12 @@ const getAvailableProviders = () => {
 
 
 const passportfun = () => {
+    passport.use(
+        new LocalStrategy(function (username, password, done) {
+            return done(null, { email: username, password });
+        })
+    );
+
     if (!providers.google.clientID) console.log(providers.google.clientID);
     else
         passport.use(

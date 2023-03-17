@@ -24,12 +24,44 @@ const port = process.env.PORT || 3000;
 
 let otherCache = {};
 app.use(authUser.verifyJWT);
+//WAY 1 send password and username : email in body of POST request 
+// TODO email password login
+// app.post("/auth/local", (req, res, next) => {
+//     passport.authenticate(
+//         "local",
+//         providers["local"].options,
+//         function (err, user, info) {
+//             if (err) {
+//                 return next(err);
+//             }
+//             if (!user) {
+//                 return res.redirect("/login");
+//             }
+//             //login logic
+//         }
+//     )(req, res, next);
+// });
 
+// app.post("/auth/register", (req, res, next) => {
+//     passport.authenticate(
+//         "local",
+//         providers["local"].options,
+//         function (err, user, info) {
+//             if (err) {
+//                 return next(err);
+//             }
+//             if (!user) {
+//                 return res.redirect("/login");
+//             }
+//             //register logic
+//         }
+//     )(req, res, next);
+// });
 app.get("/auth/:provider", (req, res, next) => {
     const provider = req.params.provider;
     passport.authenticate(provider, providers[provider].options)(req, res, next);
 });
-
+//WAY 2 send /auth/local/callback password and username : email in body of GET request to use exesting code
 app.get("/auth/:provider/callback", (req, res, next) => {
     const provider = req.params.provider;
     passport.authenticate(
@@ -42,6 +74,7 @@ app.get("/auth/:provider/callback", (req, res, next) => {
             if (!user) {
                 return res.redirect("/login");
             }
+            console.log("/auth/:provider/callback");
             //set the provider to user object
             user.provider = provider;
             //set this to local cache
@@ -51,30 +84,30 @@ app.get("/auth/:provider/callback", (req, res, next) => {
             //update user
             let dbResult, updatedUser;
             if (!req.user) {
-              dbResult = await authUser.login(user, true);
-              if (dbResult.sCode > 200)
-                return myRes.sendResponse({ mRes: dbResult }, res);
+                dbResult = await authUser.login(user, true);
+                if (dbResult.sCode > 200)
+                    return myRes.sendResponse({ mRes: dbResult }, res);
             } else {
-              updatedUser = authUser.oAuthMulti(req.cookies.user, user);
-              dbResult = await authUser.update(updatedUser);
-              if (dbResult.sCode > 200)
-                return myRes.sendResponse({ mRes: dbResult }, res);
+                updatedUser = authUser.oAuthMulti(req.cookies.user, user);
+                dbResult = await authUser.update(updatedUser);
+                if (dbResult.sCode > 200)
+                    return myRes.sendResponse({ mRes: dbResult }, res);
             }
             updatedUser = dbResult.result[0];
             const expiresInDays = process.env.COOKIE_TIME || 1;
             const cookies_options = {
-              expires: new Date(
-                Date.now() + expiresInDays * 24 * 60 * 60 * 1000
-                // Date.now() + 24 * 60 * 60 * 1000 * 24 //24 days i guess
-              ),
-              httpOnly: true,
+                expires: new Date(
+                    Date.now() + expiresInDays * 24 * 60 * 60 * 1000
+                    // Date.now() + 24 * 60 * 60 * 1000 * 24 //24 days i guess
+                ),
+                httpOnly: true,
             };
             mCookies[provider] = user;
             mCookies["user"] = updatedUser;
             mCookies["token"] = updatedUser.token;
             otherCache["token"] = updatedUser.token;
             // console.log(mCookies);
-      
+
             res.cookie(provider, mCookies[provider], cookies_options);
             res.cookie("token", mCookies["token"], cookies_options);
             res.cookie("user", mCookies["user"], cookies_options);
