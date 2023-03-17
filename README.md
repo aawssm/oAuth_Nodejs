@@ -25,3 +25,10 @@ This project provides a simple way to implement social oAuth login in NodeJS app
 2. Install dependencies by running **`npm install`**
 3. Set the Social Provider credentials in the **`.env`** file
 4. Start the server by running **`npm start`**
+
+## **Update Email Password added**
+there are two ways to login using emial password
+1. send POST request to /auth/local with body {"username":"example@email.here","password":"passwordHere"} in the request and code the login and register flow as required
+2. send GET request to /auth/local/callback with body {"username":"example@email.here","password":"passwordHere"} in the request and existing social auth flow will work.
+
+NOTE:- i havent updated the frontend to accept email password to login.
